@@ -9,6 +9,10 @@ var stand1,stand2;
 var ball;
 var slingShot;
 var polygon_img;
+
+var gameState = "onSling";
+
+
 function preload(){
   polygon_img=loadImage("polygon.png");
 }
@@ -61,6 +65,11 @@ function setup() {
   block16 = new Box(390,155,30,40);
   block32 = new Box(700,70,30,40);
 
+  polygon = Bodies.circle(50,200,20);
+  World.add(world,polygon);
+
+  slingShot = new SlingShot(this.polygon,{x:100,y:200});
+
 
 
 
@@ -72,11 +81,15 @@ function draw() {
  
   textSize(20);
   fill("lightyellow");
+
+  imageMode(CENTER);
+  image(polygon_img,polygon.position.x,polygon.position.y,40,40);
   
 
   ground.display();
   stand1.display();
   stand2.display();
+
   
   strokeWeight(2);
   stroke(15);
@@ -117,6 +130,22 @@ function draw() {
   block16.display();
   block32.display();
   
- 
+}
 
+function mouseDragged(){
+  //if (gameState!=="launched"){
+      Matter.Body.setPosition(this.polygon, {x: mouseX , y: mouseY});
+  //}
+}
+
+
+function mouseReleased(){
+  slingShot.fly();
+  //gameState = "launched";
+}
+
+function keyPressed(){
+  if(keyCode === 32){
+    slingShot.attach(this.polygon);
+  }
 }
